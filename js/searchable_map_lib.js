@@ -24,7 +24,7 @@ var SearchableMapLib = {
   initialize: function(options){
     options = options || {};
 
-    SearchableMapLib.map_centroid = options.map_centroid || [41.881832, -87.623177],
+    SearchableMapLib.map_centroid = options.map_centroid || [-48.87661025066399, -123.39330647791094],
     SearchableMapLib.defaultZoom = options.defaultZoom || 9,
     SearchableMapLib.filePath = options.filePath || "",
     SearchableMapLib.fileType = options.fileType || "csv",
@@ -348,9 +348,9 @@ var SearchableMapLib = {
 
   // -----custom functions-----
   getIcon: function(type){
-    if (type == "Pharmacy") return redIcon;
-    if (type == "Government") return blueIcon;
-    if (type == "Other") return yellowIcon;
+    if (type == "ocean") return redIcon;
+    if (type == "freshwater") return blueIcon;
+    if (type == "manmade") return yellowIcon;
     return greenIcon;
   },
   // -----end custom functions-----
