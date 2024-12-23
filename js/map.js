@@ -8,7 +8,7 @@ $(window).resize(function () {
 $(function() {
 
   SearchableMapLib.initialize({
-    filePath: 'data/Hydrography - Copy of Collection - primary.csv',
+    filePath: 'data/Hydrography Dec 23 Test',
     fileType: 'csv',
     recordName: 'film title',
     recordNamePlural: 'film titles',
