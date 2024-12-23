@@ -1,7 +1,44 @@
-<strong>
-    <%= obj["Facility Name"] %>
-</strong><br />
-<%= formatAddress(obj) %><br />
-<% if (obj["Hours"]) { %>
-    Hours: <%= obj["Hours"] %><br />
-<% } %>
+<div class="hover-box">
+    <!-- Display the Facility Name -->
+    <strong>
+        <%= obj["Facility Name"] %>
+    </strong><br />
+
+    <!-- Display Address -->
+    <%= formatAddress(obj) %><br />
+
+    <!-- Display Hours if available -->
+    <% if (obj["Hours"]) { %>
+        Hours: <%= obj["Hours"] %><br />
+    <% } %>
+
+    <!-- New Information -->
+    <strong>Title:</strong> <%= obj["Title"] || "N/A" %><br />
+    <strong>Director:</strong> <%= obj["Director"] || "N/A" %><br />
+    <strong>Country:</strong> <%= obj["Country"] || "N/A" %><br />
+    <strong>Release Year:</strong> <%= obj["Release Year"] || "N/A" %><br />
+    <strong>Water:</strong> <%= obj["Water"] || "N/A" %><br />
+
+    <!-- Display an image -->
+    <% if (obj["Image URL"]) { %>
+        <img src="<%= obj["Image URL"] %>" alt="Image of <%= obj["Facility Name"] %>" style="width: 100px; height: auto; margin-top: 5px;"><br />
+    <% } %>
+
+    <!-- Clickable link -->
+    <% if (obj["Website URL"]) { %>
+        <a href="<%= obj["Website URL"] %>" target="_blank">Visit Website</a><br />
+    <% } %>
+
+    <!-- YouTube video player -->
+    <% if (obj["YouTube Clip ID"]) { %>
+        <iframe 
+            width="200" 
+            height="113" 
+            src="https://www.youtube.com/embed/<%= obj["YouTube Clip ID"] %>" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe><br />
+    <% } %>
+</div>
