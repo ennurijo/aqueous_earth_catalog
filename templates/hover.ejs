@@ -18,6 +18,17 @@
     <strong>Country:</strong> <%= obj["Country"] || "N/A" %><br />
     <strong>Release Year:</strong> <%= obj["Release Year"] || "N/A" %><br />
     <strong>Water:</strong> <%= obj["Water"] || "N/A" %><br />
+    <strong>Description:</strong> <%= obj["Description"] || "N/A" %><br />
+
+    <!-- Rights -->
+    <% if (obj["Rights"]) { %>
+        <strong>Rights:</strong> 
+        <% if (obj["Rights"] === "public domain") { %>
+            <a href="http://rightsstatements.org/vocab/NoC-US/1.0/" target="_blank">Public Domain</a><br />
+        <% } else if (obj["Rights"] === "non-commercial") { %>
+            <a href="http://rightsstatements.org/vocab/NoC-NC/1.0/" target="_blank">Non-Commercial</a><br />
+        <% } %>
+    <% } %>
 
     <!-- Display an image -->
     <% if (obj["Image URL"]) { %>
