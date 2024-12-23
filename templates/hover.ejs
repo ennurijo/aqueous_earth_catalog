@@ -1,47 +1,12 @@
 <div class="hover-box">
-    <!-- Display the Facility Name -->
+    <!-- Display the Title -->
     <strong>
-        <%= obj["Facility Name"] %>
+        <%= obj["Title"] || "N/A" %>
     </strong><br />
 
-    <!-- Display Address -->
-    <%= formatAddress(obj) %><br />
-
-    <!-- Display Hours if available -->
-    <% if (obj["Hours"]) { %>
-        Hours: <%= obj["Hours"] %><br />
-    <% } %>
-
-    <!-- New Information -->
-    <strong>Title:</strong> <%= obj["Title"] || "N/A" %><br />
-    <strong>Director:</strong> <%= obj["Director"] || "N/A" %><br />
-    <strong>Country:</strong> <%= obj["Country"] || "N/A" %><br />
-    <strong>Release Year:</strong> <%= obj["Release Year"] || "N/A" %><br />
-    <strong>Water:</strong> <%= obj["Water"] || "N/A" %><br />
-    <strong>Description:</strong> <%= obj["Description"] || "N/A" %><br />
-
-    <!-- Rights -->
-    <% if (obj["Rights"]) { %>
-        <strong>Rights:</strong> 
-        <% if (obj["Rights"] === "public domain") { %>
-            <a href="http://rightsstatements.org/vocab/NoC-US/1.0/" target="_blank">Public Domain</a><br />
-        <% } else if (obj["Rights"] === "non-commercial") { %>
-            <a href="http://rightsstatements.org/vocab/NoC-NC/1.0/" target="_blank">Non-Commercial</a><br />
-        <% } %>
-    <% } %>
-
-    <!-- Display an image -->
-    <% if (obj["Image URL"]) { %>
-        <img src="<%= obj["Image URL"] %>" alt="Image of <%= obj["Facility Name"] %>" style="width: 100px; height: auto; margin-top: 5px;"><br />
-    <% } %>
-
-    <!-- Clickable link -->
-    <% if (obj["Website URL"]) { %>
-        <a href="<%= obj["Website URL"] %>" target="_blank">Visit Website</a><br />
-    <% } %>
-
-    <!-- YouTube video player -->
+    <!-- Video (YouTube or Archive.org) -->
     <% if (obj["YouTube Clip ID"]) { %>
+        <!-- Embed YouTube video -->
         <iframe 
             width="200" 
             height="113" 
@@ -51,5 +16,59 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
         </iframe><br />
+    <% } else if (obj["Archive.org Clip ID"]) { %>
+        <!-- Embed Archive.org video -->
+        <iframe 
+            width="200" 
+            height="113" 
+            src="https://archive.org/embed/<%= obj["Archive.org Clip ID"] %>" 
+            title="Archive.org video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe><br />
+    <% } %>
+
+    <!-- Display an image only if no video is available -->
+    <% if (!obj["YouTube Clip ID"] && !obj["Archive.org Clip ID"] && obj["Image URL"]) { %>
+        <img src="<%= obj["Image URL"] %>" alt="Image of <%= obj["Title"] %>" style="width: 100px; height: auto; margin-top: 5px;"><br />
+    <% } %>
+
+    <!-- Display Release Year -->
+    <strong>Release Year:</strong> <%= obj["Release Year"] || "N/A" %><br />
+
+    <!-- Display Location -->
+    <strong>Location:</strong> <%= obj["Location"] || "N/A" %><br />
+
+    <!-- Display Director -->
+    <strong>Director:</strong> <%= obj["Director"] || "N/A" %><br />
+
+    <!-- Display Language -->
+    <% if (obj["Language"]) { %>
+        <strong>Language:</strong> <%= obj["Language"] %><br />
+    <% } %>
+
+    <!-- Display Length -->
+    <% if (obj["Length"]) { %>
+        <strong>Length:</strong> <%= obj["Length"] || "N/A" %><br />
+    <% } %>
+
+    <!-- Display Description -->
+    <strong>Description:</strong> <%= obj["Description"] || "N/A" %><br />
+
+    <!-- Additional Information (Website URL renamed) -->
+    <% if (obj["Website URL"]) { %>
+        <strong>Additional Information:</strong> 
+        <a href="<%= obj["Website URL"] %>" target="_blank">Visit Website</a><br />
+    <% } %>
+
+    <!-- Display Rights -->
+    <% if (obj["Rights"]) { %>
+        <strong>Rights:</strong> 
+        <% if (obj["Rights"] === "public domain") { %>
+            <a href="http://rightsstatements.org/vocab/NoC-US/1.0/" target="_blank">Public Domain</a><br />
+        <% } else if (obj["Rights"] === "non-commercial") { %>
+            <a href="http://rightsstatements.org/vocab/NoC-NC/1.0/" target="_blank">Non-Commercial</a><br />
+        <% } %>
     <% } %>
 </div>
