@@ -1,131 +1,95 @@
-var SearchableMapLib = (function () {
-  var map, markers, radiusCircle;
-  var mapConfig = {};
-  var dataRecords = [];
-  var infoWindow;
+const SearchableMapLib = {
+    map: null,
+    markers: [],
+    data: [],
+    currentSearch: '',
 
-  function initialize(config) {
-    mapConfig = config;
-    map = L.map('mapCanvas').setView(mapConfig.map_centroid, mapConfig.defaultZoom);
+    initialize: function(options) {
+        this.filePath = options.filePath;
+        this.fileType = options.fileType;
+        this.recordName = options.recordName;
+        this.recordNamePlural = options.recordNamePlural;
+        this.mapCentroid = options.map_centroid || [48.8575, 2.3514]; // Default to Paris, France
+        this.defaultZoom = options.defaultZoom || 13;
+        this.defaultRadius = options.defaultRadius || 1610; // Default radius in meters
+        this.debug = options.debug || false;
 
-    // Add tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+        // Create the map
+        this.map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: this.mapCentroid[0], lng: this.mapCentroid[1] },
+            zoom: this.defaultZoom
+        });
 
-    markers = L.markerClusterGroup();
-    radiusCircle = L.circle(mapConfig.map_centroid, {
-      radius: mapConfig.defaultRadius,
-      color: '#0073e6',
-      fillColor: '#0073e6',
-      fillOpacity: 0.2
-    }).addTo(map);
+        // Load CSV data
+        this.loadData();
+    },
 
-    infoWindow = L.popup();
+    loadData: function() {
+        const _this = this;
+        d3.csv(`${this.filePath}.${this.fileType}`)
+            .then(function(data) {
+                _this.data = data;
+                _this.createMarkers();
+            })
+            .catch(function(error) {
+                console.error("Error loading data: ", error);
+            });
+    },
 
-    loadData();
-  }
+    createMarkers: function() {
+        const _this = this;
+        this.data.forEach(function(d) {
+            const lat = parseFloat(d.latitude);
+            const lng = parseFloat(d.longitude);
 
-  function loadData() {
-    var filePath = mapConfig.filePath;
-    var fileType = mapConfig.fileType;
+            if (lat && lng) {
+                const marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: _this.map,
+                    title: d["film title"] || "No Title"
+                });
 
-    if (fileType === 'csv') {
-      Papa.parse(filePath, {
-        download: true,
-        header: true,
-        complete: function (result) {
-          dataRecords = result.data;
-          processRecords();
-        },
-        error: function (error) {
-          console.error("Error loading CSV:", error);
-        }
-      });
-    } else {
-      console.error("Unsupported file type:", fileType);
+                const popupContent = `
+                    <strong>${d["Title"] || "N/A"}</strong><br />
+                    Release Year: ${d["Release Year"] || "N/A"}<br />
+                    Location: ${d["Location"] || "N/A"}<br />
+                    Director: ${d["Director"] || "N/A"}<br />
+                    <strong>Description:</strong> ${d["Description"] || "N/A"}<br />
+                `;
+
+                const infowindow = new google.maps.InfoWindow({
+                    content: popupContent
+                });
+
+                marker.addListener('click', function() {
+                    infowindow.open(_this.map, marker);
+                });
+
+                marker.addListener('mouseover', function() {
+                    infowindow.open(_this.map, marker);
+                });
+
+                marker.addListener('mouseout', function() {
+                    infowindow.close();
+                });
+
+                _this.markers.push(marker);
+            }
+        });
+    },
+
+    doSearch: function() {
+        const searchTerm = document.getElementById('search-address').value.toLowerCase();
+        this.currentSearch = searchTerm;
+
+        // Filter markers based on search term (you can add more fields here as necessary)
+        this.markers.forEach(marker => {
+            const title = marker.getTitle().toLowerCase();
+            if (title.includes(searchTerm)) {
+                marker.setVisible(true);
+            } else {
+                marker.setVisible(false);
+            }
+        });
     }
-  }
-
-  function processRecords() {
-    dataRecords.forEach(function (record) {
-      if (record.Latitude && record.Longitude) {
-        var marker = L.marker([record.Latitude, record.Longitude], {
-          title: record.Title || "Untitled"
-        });
-
-        marker.bindPopup(renderHoverContent(record));
-        markers.addLayer(marker);
-      }
-    });
-
-    map.addLayer(markers);
-  }
-
-  function renderHoverContent(record) {
-    return `
-      <div class="hover-box">
-        <strong>${record["Title"] || "N/A"}</strong><br />
-        ${record["YouTube Clip ID"] ? `
-          <iframe width="200" height="113" 
-            src="https://www.youtube.com/embed/${record["YouTube Clip ID"]}" 
-            title="YouTube video player" frameborder="0" allowfullscreen></iframe><br />`
-          : record["Archive.org Clip ID"] ? `
-          <iframe width="200" height="113" 
-            src="https://archive.org/embed/${record["Archive.org Clip ID"]}" 
-            title="Archive.org video player" frameborder="0" allowfullscreen></iframe><br />`
-          : record["Image URL"] ? `
-          <img src="${record["Image URL"]}" alt="Image of ${record["Title"]}" 
-            style="width: 100px; height: auto; margin-top: 5px;"><br />`
-          : ""}
-        <strong>Release Year:</strong> ${record["Release Year"] || "N/A"}<br />
-        <strong>Location:</strong> ${record["Location"] || "N/A"}<br />
-        <strong>Director:</strong> ${record["Director"] || "N/A"}<br />
-        ${record["Language"] ? `<strong>Language:</strong> ${record["Language"]}<br />` : ""}
-        ${record["Length"] ? `<strong>Length:</strong> ${record["Length"]}<br />` : ""}
-        <strong>Description:</strong> ${record["Description"] || "N/A"}<br />
-        ${record["Website URL"] ? `
-          <strong>Additional Information:</strong> 
-          <a href="${record["Website URL"]}" target="_blank">Visit Website</a><br />`
-          : ""}
-        ${record["Rights"] ? `
-          <strong>Rights:</strong> 
-          ${record["Rights"] === "public domain" ? `
-            <a href="http://rightsstatements.org/vocab/NoC-US/1.0/" target="_blank">Public Domain</a>`
-            : record["Rights"] === "non-commercial" ? `
-            <a href="http://rightsstatements.org/vocab/NoC-NC/1.0/" target="_blank">Non-Commercial</a>`
-            : ""}
-          <br />`
-          : ""}
-      </div>
-    `;
-  }
-
-  function doSearch() {
-    var query = document.getElementById('search-name').value.toLowerCase();
-    var address = document.getElementById('search-address').value.toLowerCase();
-
-    markers.clearLayers();
-
-    dataRecords.forEach(function (record) {
-      var matchesQuery = record.Title && record.Title.toLowerCase().includes(query);
-      var matchesAddress = record.Location && record.Location.toLowerCase().includes(address);
-
-      if (matchesQuery && matchesAddress && record.Latitude && record.Longitude) {
-        var marker = L.marker([record.Latitude, record.Longitude], {
-          title: record.Title || "Untitled"
-        });
-
-        marker.bindPopup(renderHoverContent(record));
-        markers.addLayer(marker);
-      }
-    });
-
-    map.addLayer(markers);
-  }
-
-  return {
-    initialize: initialize,
-    doSearch: doSearch
-  };
-})();
+};
