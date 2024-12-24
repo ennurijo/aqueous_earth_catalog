@@ -100,14 +100,14 @@
 
 
     <!-- Custom Map Initialization -->
-   <script type="text/javascript">
+  <script type="text/javascript">
       // Initialize the map
       var map;
 
       function initMap() {
         map = new google.maps.Map(document.getElementById('mapCanvas'), {
           center: { lat: 48.8566, lng: 2.3522 },  // Initial coordinates for Paris
-          zoom: 12
+          zoom: 7
         });
 
         // Fetch CSV and add markers
@@ -119,21 +119,30 @@
           var data = $.csv.toObjects(csvData);
           
           data.forEach(function(row) {
-            var lat = parseFloat(row.Latitude);
-            var lng = parseFloat(row.Longitude);
-            
+            var lat = parseFloat(row.Latitude);  // Assuming the CSV column is called 'Latitude'
+            var lng = parseFloat(row.Longitude);  // Assuming the CSV column is called 'Longitude'
+            var title = row.Title;  // Assuming the CSV column is called 'Title'
+
             if (!isNaN(lat) && !isNaN(lng)) {
-              new google.maps.Marker({
+              var marker = new google.maps.Marker({
                 position: { lat: lat, lng: lng },
                 map: map,
-                title: "Location"
+                title: title  // Set the title to be displayed when the marker is hovered over
+              });
+
+              // Optionally add an info window that shows the title when clicked
+              var infoWindow = new google.maps.InfoWindow({
+                content: `<h3>${title}</h3>`
+              });
+
+              marker.addListener('click', function() {
+                infoWindow.open(map, marker);
               });
             }
           });
         });
       }
     </script>
-
     <!-- Google Maps API Script (placed at the bottom for performance) -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjRYjbHJAe0dIvtudJS7E72qTNPD5SHOE&libraries=places&callback=initMap"></script>
   </body>
