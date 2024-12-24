@@ -100,16 +100,37 @@
 
 
     <!-- Custom Map Initialization -->
-    <script type="text/javascript">
+   <script type="text/javascript">
       // Initialize the map
+      var map;
+
       function initMap() {
-        var map = new google.maps.Map(document.getElementById('mapCanvas'), {
+        map = new google.maps.Map(document.getElementById('mapCanvas'), {
           center: { lat: 48.8566, lng: 2.3522 },  // Initial coordinates for Paris
           zoom: 12
         });
-        
-        // Add your markers and data handling code here
-        
+
+        // Fetch CSV and add markers
+        fetchCSVAndDisplayMarkers();
+      }
+
+      function fetchCSVAndDisplayMarkers() {
+        $.get("data/Hydrography Dec 23 Test.csv", function(csvData) {
+          var data = $.csv.toObjects(csvData);
+          
+          data.forEach(function(row) {
+            var lat = parseFloat(row.Latitude);
+            var lng = parseFloat(row.Longitude);
+            
+            if (!isNaN(lat) && !isNaN(lng)) {
+              new google.maps.Marker({
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: "Location"
+              });
+            }
+          });
+        });
       }
     </script>
 
