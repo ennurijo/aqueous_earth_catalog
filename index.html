@@ -119,8 +119,8 @@
           var data = $.csv.toObjects(csvData);
           
           data.forEach(function(row) {
-            var lat = parseFloat(row.Latitude);  // Assuming the CSV column is called 'Latitude'
-            var lng = parseFloat(row.Longitude);  // Assuming the CSV column is called 'Longitude'
+            var lat = parseFloat(row.latitude);  // Assuming the CSV column is called 'Latitude'
+            var lng = parseFloat(row.longitude);  // Assuming the CSV column is called 'Longitude'
             var title = row.Title;  // Assuming the CSV column is called 'Title'
 
             if (!isNaN(lat) && !isNaN(lng)) {
