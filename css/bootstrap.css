@@ -751,6 +751,10 @@ progress {
   margin-left: auto;
 }
 
+.custom-padding {
+  padding-left: 1.5rem; /*desired padding */
+}
+
 @media (min-width: 576px) {
   .container-sm, .container {
     max-width: 540px;
