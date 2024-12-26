@@ -39,15 +39,32 @@ var SearchableMapLib = {
       console.log('debug mode is on');
 
   //reset filters
-    $("#search-input").val(SearchableMapLib.convertToPlainString($.address.parameter('address')));
+    $("#search-input").val(SearchableMapLib.convertToPlainString($.input.parameter('input')));
 
-    var loadRadius = SearchableMapLib.convertToPlainString($.address.parameter('radius'));
-    if (loadRadius != "") 
-        $("#search-radius").val(loadRadius);
-    else 
-        $("#search-radius").val(SearchableMapLib.radius);
-     
+       $(":checkbox").prop("checked", "checked");
 
+ geocoder = new google.maps.Geocoder();
+    // initiate leaflet map
+    if (!SearchableMapLib.map) {
+      SearchableMapLib.map = new L.Map('mapCanvas', {
+        center: SearchableMapLib.map_centroid,
+        zoom: SearchableMapLib.defaultZoom,
+        scrollWheelZoom: false
+      });
+
+      SearchableMapLib.google = L.gridLayer.googleMutant({type: 'roadmap' });
+
+      SearchableMapLib.map.addLayer(SearchableMapLib.google);
+
+      //add hover info control
+      SearchableMapLib.info = L.control({position: 'bottomleft'});
+
+      SearchableMapLib.info.onAdd = function (map) {
+          this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+          this.update();
+          return this._div;
+      };
+   
         // Create the map using the Google Maps API
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: this.mapCentroid[0], lng: this.mapCentroid[1] },
@@ -123,10 +140,12 @@ var SearchableMapLib = {
 
     // Function to search the markers based on user input
 
-    doSearch() {
-  console.log('doSearch called');
-  const searchTerm = document.getElementById("search-input").value.toLowerCase();
-  const filterType = document.getElementById("search-filter").value;
+
+  
+    doSearch: function() {
+      SearchableMapLib.clearSearch();
+  var searchTerm = document.getElementById("search-input").value.toLowerCase();
+  var filterType = document.getElementById("search-filter").value;
 
   // Loop over the markers and the data (CSV data)
   this.markers.forEach((marker, index) => {
@@ -136,18 +155,51 @@ var SearchableMapLib = {
     // Determine which field to search based on the filter type
     switch (filterType) {
       case 'Title':
-        fieldValue = record.Title?.toLowerCase() || ''; // Match Title
+        fieldValue = record['Title']?.toLowerCase() || ''; // Match Title
         break;
       case 'Release Year':
         fieldValue = record['Release Year']?.toString() || ''; // Match Release Year (convert to string for comparison)
         break;
       case 'Director':
-        fieldValue = record.Director?.toLowerCase() || ''; // Match Director
+        fieldValue = record.Director?.toLowerCase()|| ''; // Match Director
         break;
       default:
         fieldValue = ''; // Default to empty string if filter is invalid
     }
 
+ renderMap: function() {
+    SearchableMapLib.currentResultsLayer.addTo(SearchableMapLib.map);
+
+     renderList: function() {
+    var results = $('#results-list');
+    results.empty();
+
+    if (SearchableMapLib.currentResults.features.length == 0) {
+      results.append("<p class='no-results'>No results. Please try a different title, year, or name.</p>");
+    }
+   
+        });
+      }
+  },
+
+  getResults: function() {
+    if (SearchableMapLib.debug) {
+      console.log('results length')
+      console.log(SearchableMapLib.currentResults.features.length)
+    }
+
+    var recname = SearchableMapLib.recordNamePlural;
+    if (SearchableMapLib.currentResults.features.length == 1) {
+        recname = SearchableMapLib.recordName;
+    }
+
+    SearchableMapLib.results_div.update(SearchableMapLib.currentResults.features.length);
+
+    $('#list-result-count').html(SearchableMapLib.currentResults.features.length.toLocaleString('en') + ' ' + recname + ' found')
+  },
+
+
+  
     // If the field value contains the search term, show the marker; otherwise, hide it
     // ** This logic can be replaced by calling the searchMarkers function**
     // if (fieldValue.includes(searchTerm)) {
