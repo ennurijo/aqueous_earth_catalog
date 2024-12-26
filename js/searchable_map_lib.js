@@ -1,33 +1,52 @@
-const SearchableMapLib = {
-    map: null,
-    markers: [],
-    data: [],
-    currentSearch: '',
+var SearchableMapLib = SearchableMapLib || {};
+var SearchableMapLib = {
 
-    initialize: function(options) {
-        // The path to your CSV file - INPUT YOUR FILE PATH HERE
-        this.filePath = options.filePath;  "data/Hydrography Dec 23 2023 Test"
-        
-        // The file type, which should be "csv" for your case
-        this.fileType = options.fileType || "csv"; // You should leave this as "csv" for your CSV file
+  // parameters to be defined on initialize() 
+  map_centroid: [],
+  defaultZoom: "",
+  filePath: '',
+  fileType: '',
+  csvOptions: '',
+  listOrderBy: '',
+  recordName: '',
+  recordNamePlural: '',
+  debug: false,
 
-        // The name of a single record (film title or similar)
-        this.recordName = options.recordName;  "Film"
+  // internal properties
+  radius: '',
+  csvData: null,
+  geojsonData: null,
+  currentResults: null,
+  currentResultsLayer: null,
+  currentPinpoint: null,
+  lastClickedLayer: null,
 
-        // The plural name of the record (films or similar)
-        this.recordNamePlural = options.recordNamePlural; "Films"
+ initialize: function(options){
+    options = options || {};
 
-        // Centroid of the map to set initial map center (default to Paris if not specified)
-        this.mapCentroid = options.map_centroid || [48.8575, 2.3514]; // Default to Paris, France
+    SearchableMapLib.map_centroid = options.map_centroid || [48.8575, 2.3514]; // Default to Paris, France
+    SearchableMapLib.defaultZoom = options.defaultZoom || 13,
+    SearchableMapLib.filePath = options.filePath || "data/Hydrography Dec 23 2023 Test",
+    SearchableMapLib.fileType = options.fileType || "csv",
+    SearchableMapLib.csvOptions = options.csvOptions || {separator: ',', delimiter: '"'},
+    SearchableMapLib.listOrderBy = options.listOrderBy || "",
+    SearchableMapLib.recordName = options.recordName || "result",
+    SearchableMapLib.recordNamePlural = options.recordNamePlural || "results",
+    SearchableMapLib.radius = options.defaultRadius || 1610,
+    SearchableMapLib.debug = options.debug || false
+    
+    if (SearchableMapLib.debug)
+      console.log('debug mode is on');
 
-        // The default zoom level of the map
-        this.defaultZoom = options.defaultZoom || 13;
+  //reset filters
+    $("#search-input").val(SearchableMapLib.convertToPlainString($.address.parameter('address')));
 
-        // The default search radius (default to 1 mile in meters)
-        this.defaultRadius = options.defaultRadius || 1610; // Default radius in meters (1 mile)
-
-        // Option to enable debug mode (set to true to view debug messages)
-        this.debug = options.debug || false;
+    var loadRadius = SearchableMapLib.convertToPlainString($.address.parameter('radius'));
+    if (loadRadius != "") 
+        $("#search-radius").val(loadRadius);
+    else 
+        $("#search-radius").val(SearchableMapLib.radius);
+     
 
         // Create the map using the Google Maps API
         this.map = new google.maps.Map(document.getElementById('map'), {
