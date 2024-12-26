@@ -103,38 +103,54 @@ const SearchableMapLib = {
     },
 
     // Function to search the markers based on user input
-doSearch() {
-    console.log('doSearch called");  // Debug line to check if function is triggered
-    const searchTerm = document.getElementById("search-input").value.toLowerCase();
-    const filterType = document.getElementById("search-filter").value;  // e.g., "Title", "Release Year", "Director"
 
-    // Loop over the markers and the data (CSV data)
-    this.markers.forEach((marker, index) => {
-        const record = this.data[index]; // Get the corresponding data record from CSV
-        let fieldValue = ''; // Will store the value to search on
+    doSearch() {
+  console.log('doSearch called');
+  const searchTerm = document.getElementById("search-input").value.toLowerCase();
+  const filterType = document.getElementById("search-filter").value;
 
-        // Determine which field to search based on the filter type
-        switch (filterType) {
-            case 'Title':
-                fieldValue = record.Title?.toLowerCase() || ''; // Match Title
-                break;
-            case 'Release Year':
-                fieldValue = record['Release Year']?.toString() || ''; // Match Release Year (convert to string for comparison)
-                break;
-            case 'Director':
-                fieldValue = record.Director?.toLowerCase() || ''; // Match Director
-                break;
-            default:
-                fieldValue = ''; // Default to empty string if filter is invalid
-        }
+  // Loop over the markers and the data (CSV data)
+  this.markers.forEach((marker, index) => {
+    const record = this.data[index]; // Get the corresponding data record from CSV
+    let fieldValue = ''; // Will store the value to search on
 
-        // If the field value contains the search term, show the marker; otherwise, hide it
-        if (fieldValue.includes(searchTerm)) {
-            marker.setVisible(true);  // Show marker
-        } else {
-            marker.setVisible(false); // Hide marker
-        }
-    });
+    // Determine which field to search based on the filter type
+    switch (filterType) {
+      case 'Title':
+        fieldValue = record.Title?.toLowerCase() || ''; // Match Title
+        break;
+      case 'Release Year':
+        fieldValue = record['Release Year']?.toString() || ''; // Match Release Year (convert to string for comparison)
+        break;
+      case 'Director':
+        fieldValue = record.Director?.toLowerCase() || ''; // Match Director
+        break;
+      default:
+        fieldValue = ''; // Default to empty string if filter is invalid
+    }
+
+    // If the field value contains the search term, show the marker; otherwise, hide it
+    // ** This logic can be replaced by calling the searchMarkers function**
+    // if (fieldValue.includes(searchTerm)) {
+    //   marker.setVisible(true); // Show marker
+    // } else {
+    //   marker.setVisible(false); // Hide marker
+    // }
+  });
+
+  // Call the searchMarkers function with the searchTerm
+  this.searchMarkers(searchTerm);
+},
+
+searchMarkers: function(searchTerm) {
+  this.markers.forEach(marker => {
+    const markerTitle = marker.getTitle().toLowerCase();
+    if (markerTitle.includes(searchTerm)) {
+      marker.setVisible(true);
+    } else {
+      marker.setVisible(false);
+    }
+  });
 }
 
 
