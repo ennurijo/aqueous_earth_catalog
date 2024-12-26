@@ -70,8 +70,43 @@
     <main role="main" class="container-fluid">
         <div class="row">
             <div class="col-md-3">
-                <p>This is a map that marks global film and video texts that feature bodies of water. The map is a work-in-progress: more features are under development. It is a complementary cartographic guide to
-Ennuri Jo's book manuscript, <i>Aqueous Image: Cinema and the Rhetoric of Water at the End of the World. </i></p>
+                <p>This is a searchable map that marks global film and video texts that feature bodies of water. The map is a work-in-progress: more features are under development. It is a complementary cartographic guide to
+Ennuri Jo's book manuscript, <i>Aqueous Image: Cinema and the Rhetoric of Water at the End of the World. </i> </p>
+           <br>
+                <div class="card bg-light">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          Search by:
+          <select id="search-filter" class="form-control">
+            <option value="Title">Title</option>
+            <option value="Release Year">Release Year</option>
+            <option value="Location">Location</option>
+            <option value="Director">Director</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          Enter Search Term
+          <input class="form-control" id="search-input" placeholder="Enter your search term" type="text">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnSearch">
+      <i class="fa fa-search"></i> Search
+    </button>
+    <button class="btn btn-secondary" id="btnReset" title="Reset">
+      <i class="fa fa-repeat" aria-hidden="true"></i> Reset
+    </button>
+  </div>
+</div>
+
             </div>
             <div class="col-md-9">
                 <div class="row" style="height: 100vh;">
