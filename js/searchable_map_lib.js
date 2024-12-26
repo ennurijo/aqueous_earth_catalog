@@ -22,6 +22,9 @@ const SearchableMapLib = {
 
         // Load CSV data
         this.loadData();
+
+        // Add event listeners for the search and reset buttons
+        this.addEventListeners();
     },
 
     loadData: function() {
@@ -79,18 +82,41 @@ const SearchableMapLib = {
         });
     },
 
-   SearchableMapLib.doSearch = function() {
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    const filterType = document.getElementById('search-filter').value;
+    doSearch: function() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const filterType = document.getElementById('search-filter').value;
 
-    this.markers.forEach((marker, index) => {
-        const record = this.data[index]; // Get the corresponding data record
-        const fieldValue = record[filterType]?.toLowerCase() || ''; // Get the value for the selected filter
+        this.markers.forEach((marker, index) => {
+            const record = this.data[index]; // Get the corresponding data record
+            const fieldValue = record[filterType]?.toLowerCase() || ''; // Get the value for the selected filter
 
-        if (fieldValue.includes(searchTerm)) {
-            marker.setVisible(true);
-        } else {
-            marker.setVisible(false);
-        }
-    });
+            if (fieldValue.includes(searchTerm)) {
+                marker.setVisible(true);
+            } else {
+                marker.setVisible(false);
+            }
+        });
+    },
+
+    addEventListeners: function() {
+        const _this = this;
+
+        // Add event listener for the search button
+        document.getElementById('btnSearch').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default form submission
+            _this.doSearch();  // Call the doSearch function
+        });
+
+        // Add event listener for the reset button
+        document.getElementById('btnReset').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default behavior of the reset button
+            document.getElementById('search-input').value = '';  // Clear the search input
+            document.getElementById('search-filter').value = '';  // Reset the filter dropdown
+
+            // Make all markers visible again
+            _this.markers.forEach(function(marker) {
+                marker.setVisible(true);
+            });
+        });
+    }
 };
