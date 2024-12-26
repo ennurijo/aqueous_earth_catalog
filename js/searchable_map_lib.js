@@ -104,6 +104,7 @@ const SearchableMapLib = {
 
     // Function to search the markers based on user input
 doSearch() {
+    console.log('doSearch called");  // Debug line to check if function is triggered
     const searchTerm = document.getElementById("search-input").value.toLowerCase();
     const filterType = document.getElementById("search-filter").value;  // e.g., "Title", "Release Year", "Director"
 
