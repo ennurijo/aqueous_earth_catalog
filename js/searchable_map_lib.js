@@ -46,7 +46,8 @@ const SearchableMapLib = {
                 const marker = new google.maps.Marker({
                     position: { lat: lat, lng: lng },
                     map: _this.map,
-                    title: d["film title"] || "No Title"
+                    title: d["film title"] || "No Title",
+                    customData: d  // Attach the entire record for later use in search
                 });
 
                 const popupContent = `
@@ -79,17 +80,22 @@ const SearchableMapLib = {
     },
 
     doSearch: function() {
-        const searchTerm = document.getElementById('search-address').value.toLowerCase();
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
         this.currentSearch = searchTerm;
 
-        // Filter markers based on search term (you can add more fields here as necessary)
+        // Iterate through markers and filter based on multiple fields
         this.markers.forEach(marker => {
-            const title = marker.getTitle().toLowerCase();
-            if (title.includes(searchTerm)) {
-                marker.setVisible(true);
-            } else {
-                marker.setVisible(false);
-            }
+            const data = marker.customData;
+            const matches = [
+                data["film title"]?.toLowerCase(),
+                data["Title"]?.toLowerCase(),
+                data["Release Year"]?.toString().toLowerCase(),
+                data["Location"]?.toLowerCase(),
+                data["Director"]?.toLowerCase()
+            ].some(field => field && field.includes(searchTerm));
+
+            // Show or hide marker based on matches
+            marker.setVisible(matches);
         });
     }
 };
