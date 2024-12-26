@@ -1,29 +1,41 @@
-// Initialize the map when the page is loaded
+// Initialize the map
+var map;
+
 function initMap() {
-    // Create the map centered around Paris, France
-    const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 48.8575, lng: 2.3514 },  // Coordinates for Paris
-        zoom: 13
+    map = new google.maps.Map(document.getElementById('mapCanvas'), {
+        center: { lat: 48.8566, lng: 2.3522 }, // Initial coordinates for Paris
+        zoom: 7
     });
 
-    // Load the CSV data
-    d3.csv("data/Hydrography Dec 23 2023 Test.csv")
-        .then(function(data) {
-            // Loop through each data point and create a marker
-            data.forEach(function(d) {
-                const lat = parseFloat(d.latitude);  // Assuming latitude is in the CSV
-                const lng = parseFloat(d.longitude); // Assuming longitude is in the CSV
+    // Fetch CSV and add markers
+    fetchCSVAndDisplayMarkers();
+}
 
-                if (lat && lng) { // Ensure valid coordinates
-                    const marker = new google.maps.Marker({
-                        position: { lat: lat, lng: lng },
-                        map: map,
-                        title: d["film title"] || "No Title" // Title from CSV data
-                    });
+function fetchCSVAndDisplayMarkers() {
+    $.get("data/Hydrography Dec 23 Test.csv", function(csvData) {
+        var data = $.csv.toObjects(csvData);
 
-                    // Create a content string for the popup (you can use EJS here if you want dynamic content)
-                    const popupContent = `
-                        <strong>${d["Title"] || "N/A"}</strong><br />
-                        Release Year: ${d["Release Year"] || "N/A"}<br />
-                        Location: ${d["Location"] || "N/A"}<br />
-                        Dir
+        data.forEach(function(row) {
+            var lat = parseFloat(row.latitude);  // Assuming the CSV column is called 'Latitude'
+            var lng = parseFloat(row.longitude); // Assuming the CSV column is called 'Longitude'
+            var title = row.Title;  // Assuming the CSV column is called 'Title'
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                var marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: title // Set the title to be displayed when the marker is hovered over
+                });
+
+                // Optionally add an info window that shows the title when clicked
+                var infoWindow = new google.maps.InfoWindow({
+                    content: `<h3>${title}</h3>`
+                });
+
+                marker.addListener('click', function() {
+                    infoWindow.open(map, marker);
+                });
+            }
+        });
+    });
+}
