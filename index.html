@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang='en'>
-  <head>
+<html lang="en">
+<head>
     <title>Aqueous Earth Catalog</title>
 
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta content='Enter description here.' name='description'>
-    <meta content='Aqueous Earth Catalog' name='author'>
-    
+    <meta content="Enter description here." name="description">
+    <meta content="Aqueous Earth Catalog" name="author">
+
     <!-- Metadata for social media -->
     <meta content="Aqueous Earth Catalog" property="og:site_name">
     <meta content="Aqueous Earth Catalog" property="og:title">
@@ -15,7 +15,7 @@
     <meta content="Enter description here." property="og:description">
     <meta content="https://searchable-map-template-csv.netlify.com/" property="og:url">
     <meta content="https://searchable-map-template-csv.netlify.com/img/screenshot.jpg" property="og:image">
-    
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@DataMadeCo">
     <meta name="twitter:creator" content="@DataMadeCo">
@@ -26,8 +26,8 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="css/custom.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
     <!-- External JS Libraries -->
     <script src="lib/jquery-3.3.1.min.js"></script>
@@ -41,7 +41,7 @@
     <script src="js/csv-to-geojson.js"></script>
 
     <!-- Leaflet and Google -->
-    <link rel="stylesheet" href="css/leaflet.css"/>
+    <link rel="stylesheet" href="css/leaflet.css" />
     <script src="lib/leaflet.js"></script>
     <script src="lib/turf.min.js"></script>
     <script src="lib/Leaflet.GoogleMutant.js"></script>
@@ -50,105 +50,41 @@
     <!-- Custom JavaScript -->
     <script src="js/searchable_map_lib.js"></script>
     <script src="js/analytics_lib.js"></script>
-  </head>
+    <script src="js/map.js"></script>
+</head>
 
-  <body>
-    <!-- Navbar, map, and other content go here -->
-
- <nav class="navbar navbar-expand-md navbar-light mb-2">
-      <a class="navbar-brand" href="/">Aqueous Earth Catalog</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse mr-auto" id="navbarsExampleDefault">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link active" href="/"><i class="fa fa-map-marker" aria-hidden="true"></i> Map</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> About</a></li>
-        </ul>
-      </div>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light mb-2">
+        <a class="navbar-brand" href="/">Aqueous Earth Catalog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mr-auto" id="navbarsExampleDefault">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link active" href="/"><i class="fa fa-map-marker" aria-hidden="true"></i> Map</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> About</a></li>
+            </ul>
+        </div>
     </nav>
- <!-- Main content -->
 
     <main role="main" class="container-fluid">
-      <div class="row">
-	<!-- Content for the left side -->
-
-        <div class="col-md-3">
-        <p>This is a map that marks global film and video texts 
-that feature bodies of water.
-The map is a work-in-progress: more features are under development.
-It is a complementary cartographic guide to 
-<br> Ennuri Jo's book manuscript, 
-<i> Aqueous Image: Cinema and the Rhetoric of Water at the End of the World.</i>
-	</p>
-          </div>
-
-	<!-- Right Half : Map and credit line -->
-	<div class="col-md-9">
-	<div class="row" style="height: 100vh;"> <!-- full neight for the right side -->
-	<!-- Map -->	
-      <div class="col-12" style="height: 90vh;"> <!--map takes most of the space -->
-		<div id="mapCanvas" style="height: 100%;"></div>
-      </div>
-	<!-- Credit Line Below the Map -->
-   <div class="col-12" style="height: 10vh;">
-		<p style="text-align: right;"> Based on <a href="https://github.com/datamade/searchable-map-template-csv" target="_blank">Searchable Map Template - CSV</a> by 
-    <a href="https://derekeder.com/" target="_blank">Derek Eder</a> and 
-    <a href="https://datamade.us/" target="_blank">DataMade</a>
-    </p>
+        <div class="row">
+            <div class="col-md-3">
+                <p>This is a map that marks global film and video texts that feature bodies of water...</p>
+            </div>
+            <div class="col-md-9">
+                <div class="row" style="height: 100vh;">
+                    <div class="col-12" style="height: 90vh;">
+                        <div id="mapCanvas" style="height: 100%;"></div>
+                    </div>
+                    <div class="col-12" style="height: 10vh;">
+                        <p style="text-align: right;">Based on <a href="https://github.com/datamade/searchable-map-template-csv" target="_blank">Searchable Map Template...</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </main>
 
-		  
-
-
-
-    <!-- Custom Map Initialization -->
-  <script type="text/javascript">
-      // Initialize the map
-      var map;
-
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('mapCanvas'), {
-          center: { lat: 48.8566, lng: 2.3522 },  // Initial coordinates for Paris
-          zoom: 7
-        });
-
-        // Fetch CSV and add markers
-        fetchCSVAndDisplayMarkers();
-      }
-
-      function fetchCSVAndDisplayMarkers() {
-        $.get("data/Hydrography Dec 23 Test.csv", function(csvData) {
-          var data = $.csv.toObjects(csvData);
-          
-          data.forEach(function(row) {
-            var lat = parseFloat(row.latitude);  // Assuming the CSV column is called 'Latitude'
-            var lng = parseFloat(row.longitude);  // Assuming the CSV column is called 'Longitude'
-            var title = row.Title;  // Assuming the CSV column is called 'Title'
-
-            if (!isNaN(lat) && !isNaN(lng)) {
-              var marker = new google.maps.Marker({
-                position: { lat: lat, lng: lng },
-                map: map,
-                title: title  // Set the title to be displayed when the marker is hovered over
-              });
-
-              // Optionally add an info window that shows the title when clicked
-              var infoWindow = new google.maps.InfoWindow({
-                content: `<h3>${title}</h3>`
-              });
-
-              marker.addListener('click', function() {
-                infoWindow.open(map, marker);
-              });
-            }
-          });
-        });
-      }
-    </script>
-    <!-- Google Maps API Script (placed at the bottom for performance) -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjRYjbHJAe0dIvtudJS7E72qTNPD5SHOE&libraries=places&callback=initMap"></script>
-  </body>
+</body>
 </html>
