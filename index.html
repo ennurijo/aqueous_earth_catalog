@@ -70,63 +70,121 @@
     </nav>
 
 <!-- Main page -->
-    
-    <main role="main" class="container-fluid">
-        <div class="row" style="height: 100vh;">
-<!-- Left column (4 parts) -->
-            
-            <div class="col-md-4" left-column>
-                <p>This is a searchable map that marks global film and video texts that feature bodies of water. The map is a work-in-progress: more features are under development. It is a complementary cartographic guide to
-Ennuri Jo's book manuscript, <i>Aqueous Image: Cinema and the Rhetoric of Water at the End of the World. </i> </p>
-           <br>
-
-<!-- Search Box --> 
-                <div class="card bg-light">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="form-group">
-          Search by Title, Release Year, Location (nearest town, city, province / city, or country), or Director. 
-<input class="form-control' id='search-input' placeholder='Enter sesarch term' type='text'>
-        </div>
-      </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                Filter by:
-          <select id="search-filter" class="form-control">
-            <option value="Title">Title</option>
-            <option value="Release Year">Release Year</option>
-            <option value="Location">Location</option>
-            <option value="Director">Director</option>
-          </select>
-        </div>
-      </div>
-    </div>
+<main role="main" class="container-fluid">
+    <div class="row" style="height: 100vh;">
         
-<!-- Buttons -->
-        
-   <button class='btn btn-primary' id="btnSearch"><i class='fa fa-search'></i> Search</button>
-        <a href="/" class='btn btn-secondary' id="btnReset" title="Reset"><i class="fa fa-repeat" aria-hidden="true"></i> Reset</a>
-        <button class='btn btn-dark' id='btnViewMode' title='Change view'><i class='fa fa-list'></i> List view</button>
-    </div>
+        <!-- Left column (4 parts) -->
+        <div class="col-md-4" id="left-column">
+            <p>This is a searchable map that marks global film and video texts that feature bodies of water. The map is a work-in-progress: more features are under development. It is a complementary cartographic guide to
+            Ennuri Jo's book manuscript, <i>Aqueous Image: Cinema and the Rhetoric of Water at the End of the World.</i></p>
+            <br>
 
-    <!-- right column (6 parts) -->
-      
-            <div class="col-md-8">
-                <div class="row" style="height: 100vh;">
-                    <div class="col-12" style="height: 90vh;">
-                        <div id="mapCanvas" style="height: 100%;"></div>
+            <!-- Search Box -->
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                Search by Title, Release Year, Location (nearest town, city, province / city, or country), or Director. 
+                                <input class="form-control" id="search-input" placeholder="Enter search term" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                Filter by:
+                                <select id="search-filter" class="form-control">
+                                    <option value="Title">Title</option>
+                                    <option value="Release Year">Release Year</option>
+                                    <option value="Location">Location</option>
+                                    <option value="Director">Director</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    
-    <!-- Credit line -->
-                    <div class="col-12" style="height: 10vh;">
-                        <p style="text-align: right;">Based on <a href="https://github.com/datamade/searchable-map-template-csv" target="_blank">Searchable Map Template</a> by <a href="https://derekeder.com/">Derek Eder</a> and <a href="https://datamade.us">Datamade</a> </p>
-                    </div>
+
+                    <!-- Buttons -->
+                    <button class="btn btn-primary" id="btnSearch"><i class="fa fa-search"></i> Search</button>
+                    <button class="btn btn-secondary" id="btnReset" title="Reset" type="button"><i class="fa fa-repeat" aria-hidden="true"></i> Reset</button>
+                    <button class="btn btn-dark" id="btnViewMode" title="Change view"><i class="fa fa-list"></i> List view</button>
                 </div>
             </div>
         </div>
-    </main>
+
+        <!-- Right column (6 parts) -->
+        <div class="col-md-8">
+            <div class="row" style="height: 100vh;">
+                <div class="col-12" style="height: 90vh;">
+                    <div id="mapCanvas" style="height: 100%;"></div>
+                </div>
+
+                <!-- Credit line -->
+                <div class="col-12" style="height: 10vh;">
+                    <p style="text-align: right;">Based on <a href="https://github.com/datamade/searchable-map-template-csv" target="_blank">Searchable Map Template</a> by <a href="https://derekeder.com/">Derek Eder</a> and <a href="https://datamade.us">Datamade</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjRYjbHJAe0dIvtudJS7E72qTNPD5SHOE&libraries=places&callback=initMap"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the button elements
+    const btnSearch = document.getElementById("btnSearch");
+    const btnReset = document.getElementById("btnReset");
+    const btnViewMode = document.getElementById("btnViewMode");
+
+    // Handle the search button click
+    if (btnSearch) {
+        btnSearch.addEventListener("click", function() {
+            console.log('Search button clicked');
+            // Call doSearch() function from SearchableMapLib
+            SearchableMapLib.doSearch();
+        });
+    }
+
+    // Handle the reset button click
+    if (btnReset) {
+        btnReset.addEventListener("click", function() {
+            console.log('Reset button clicked');
+            // Reset the search input
+            document.getElementById('search-input').value = '';
+            // Reset the search filter
+            document.getElementById('search-filter').value = 'Title'; // Default filter type
+            // Make all markers visible again
+            SearchableMapLib.markers.forEach(function(marker) {
+                marker.setVisible(true);
+            });
+        });
+    }
+
+    // Handle the list view toggle button click
+    if (btnViewMode) {
+        btnViewMode.addEventListener("click", function() {
+            console.log('List View button clicked');
+            // Toggle map visibility (or change to list view)
+            const mapCanvas = document.getElementById("mapCanvas");
+            const listView = document.getElementById("listView"); // If you have a div for list view
+
+            if (mapCanvas.style.display !== "none") {
+                // Hide map and show list view
+                mapCanvas.style.display = "none";
+                if (listView) {
+                    listView.style.display = "block";
+                }
+                btnViewMode.innerHTML = '<i class="fa fa-map"></i> Map view'; // Change button text
+            } else {
+                // Show map and hide list view
+                mapCanvas.style.display = "block";
+                if (listView) {
+                    listView.style.display = "none";
+                }
+                btnViewMode.innerHTML = '<i class="fa fa-list"></i> List view'; // Change button text
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
