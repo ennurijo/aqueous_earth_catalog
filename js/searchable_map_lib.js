@@ -104,39 +104,42 @@ const SearchableMapLib = {
 
     // Function to search the markers based on user input
     doSearch: function() {
-        console.log('Search triggered');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const filterType = document.getElementById('search-filter').value;
+    console.log(`Searching for: ${searchTerm} in ${filterType}`);
 
-        const searchTerm = document.getElementById('search-input').value.toLowerCase();
-        const filterType = document.getElementById('search-filter').value;  // Get selected filter (Title, Release Year, Location, etc.)
+    this.markers.forEach((marker, index) => {
+        const record = this.data[index]; // Get the corresponding data record
+        const fieldValue = record[filterType]?.toLowerCase() || ''; // Get the value for the selected filter
 
-        // Iterate through the markers and check if the search term matches any of the selected filter fields
-        this.markers.forEach((marker, index) => {
-            const record = this.data[index]; // Get the corresponding data record
-            const fieldValue = record[filterType]?.toLowerCase() || ''; // Get the value for the selected filter
+        // If the field value contains the search term, show the marker, otherwise hide it
+        if (fieldValue.includes(searchTerm)) {
+            marker.setVisible(true);
+        } else {
+            marker.setVisible(false);
+        }
+    });
+}
 
-            // Show or hide the marker based on search term match
-            if (fieldValue.includes(searchTerm)) {
-                marker.setVisible(true);  // Show marker
-            } else {
-                marker.setVisible(false);  // Hide marker
-            }
-        });
-    },
 
     // Function to handle the reset button functionality
-    resetSearch: function() {
-        // Clear the search input and reset all markers visibility
-        document.getElementById('search-input').value = '';
-        this.markers.forEach(marker => marker.setVisible(true)); // Show all markers
+resetMap: function() {
+    // Reset all markers visibility to true (showing all markers)
+    this.markers.forEach(marker => {
+        marker.setVisible(true);
+    });
     }
-};
 
-// Add event listener for the search button
+// Event listener for search button
 document.getElementById('btnSearch').addEventListener('click', function() {
-    SearchableMapLib.doSearch();  // Trigger search when button is clicked
+    console.log('Search triggered');
+    SearchableMapLib.doSearch(); // Trigger the search
 });
 
-// Add event listener for the reset button
+// Event listener for reset button
 document.getElementById('btnReset').addEventListener('click', function() {
-    SearchableMapLib.resetSearch();  // Reset search and show all markers when reset button is clicked
+    console.log('Reset triggered');
+    document.getElementById('search-input').value = '';  // Clear the input
+    document.getElementById('search-filter').value = 'Title';  // Reset the filter to default
+    SearchableMapLib.resetMap();  // Optionally reset the map view or markers if needed
 });
