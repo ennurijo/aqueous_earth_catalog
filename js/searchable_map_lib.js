@@ -103,20 +103,35 @@ const SearchableMapLib = {
     },
 
     // Function to search the markers based on user input
-    doSearch: function() {
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    const filterType = document.getElementById('search-filter').value;
-    console.log(`Searching for: ${searchTerm} in ${filterType}`);
+doSearch() {
+    const searchTerm = document.getElementById("search-input").value.toLowerCase();
+    const filterType = document.getElementById("search-filter").value;  // e.g., "Title", "Release Year", "Director"
 
+    // Loop over the markers and the data (CSV data)
     this.markers.forEach((marker, index) => {
-        const record = this.data[index]; // Get the corresponding data record
-        const fieldValue = record[filterType]?.toLowerCase() || ''; // Get the value for the selected filter
+        const record = this.data[index]; // Get the corresponding data record from CSV
+        let fieldValue = ''; // Will store the value to search on
 
-        // If the field value contains the search term, show the marker, otherwise hide it
+        // Determine which field to search based on the filter type
+        switch (filterType) {
+            case 'Title':
+                fieldValue = record.Title?.toLowerCase() || ''; // Match Title
+                break;
+            case 'Release Year':
+                fieldValue = record['Release Year']?.toString() || ''; // Match Release Year (convert to string for comparison)
+                break;
+            case 'Director':
+                fieldValue = record.Director?.toLowerCase() || ''; // Match Director
+                break;
+            default:
+                fieldValue = ''; // Default to empty string if filter is invalid
+        }
+
+        // If the field value contains the search term, show the marker; otherwise, hide it
         if (fieldValue.includes(searchTerm)) {
-            marker.setVisible(true);
+            marker.setVisible(true);  // Show marker
         } else {
-            marker.setVisible(false);
+            marker.setVisible(false); // Hide marker
         }
     });
 }
