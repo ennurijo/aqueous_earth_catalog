@@ -79,23 +79,18 @@ const SearchableMapLib = {
         });
     },
 
-    doSearch: function() {
-        const searchTerm = document.getElementById('search-input').value.toLowerCase();
-        this.currentSearch = searchTerm;
+   SearchableMapLib.doSearch = function() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const filterType = document.getElementById('search-filter').value;
 
-        // Iterate through markers and filter based on multiple fields
-        this.markers.forEach(marker => {
-            const data = marker.customData;
-            const matches = [
-                data["film title"]?.toLowerCase(),
-                data["Title"]?.toLowerCase(),
-                data["Release Year"]?.toString().toLowerCase(),
-                data["Location"]?.toLowerCase(),
-                data["Director"]?.toLowerCase()
-            ].some(field => field && field.includes(searchTerm));
+    this.markers.forEach((marker, index) => {
+        const record = this.data[index]; // Get the corresponding data record
+        const fieldValue = record[filterType]?.toLowerCase() || ''; // Get the value for the selected filter
 
-            // Show or hide marker based on matches
-            marker.setVisible(matches);
-        });
-    }
+        if (fieldValue.includes(searchTerm)) {
+            marker.setVisible(true);
+        } else {
+            marker.setVisible(false);
+        }
+    });
 };
