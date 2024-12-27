@@ -40,7 +40,7 @@ var SearchableMapLib = {
       const lng = parseFloat(record.longitude);
 
       if (lat && lng) {
-const { AdvancedMarkerElement } = google.maps.marker;
+const { AdvancedMarkerElement } = google.maps.marker.AdvancedMarkerElement;
 
 const marker = new AdvancedMarkerElement({
   position: { lat, lng },
