@@ -6,7 +6,7 @@ const SearchableMapLib = {
   fileType: "csv", // File type (CSV)
   recordName: "Film",
   recordNamePlural: "Films",
-
+  
   // Initialize the map and load data
   initialize(options = {}) {
     // Update options if provided
@@ -40,12 +40,18 @@ const SearchableMapLib = {
       const lng = parseFloat(record.longitude);
 
       if (lat && lng) {
-        const marker = new google.maps.Marker({
-          position: { lat, lng },
-          map: this.map,
-          title: record.Title ?? "No Title", // Use "Title" column for marker title
-          customData: record, // Store the full data record
-        });
+const { AdvancedMarkerElement } = google.maps.marker;
+
+const marker = new AdvancedMarkerElement({
+  position: { lat, lng },
+  map: this.map,
+  title: record.Title ?? "No Title",
+});
 
         // Add an info window to each marker
         const infoWindow = new google.maps.InfoWi
+
+        function initMap() {
+  SearchableMapLib.initialize();
+}
+
