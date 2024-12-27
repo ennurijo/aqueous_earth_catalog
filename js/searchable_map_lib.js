@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnSearch?.addEventListener("click", () => SearchableMapLib.doSearch());
   btnReset?.addEventListener("click", () => SearchableMapLib.resetMap());
 });
-\
+
 // Log to confirm it is globally available
 console.log("SearchableMapLib is available globally:", window.SearchableMapLib);
 
