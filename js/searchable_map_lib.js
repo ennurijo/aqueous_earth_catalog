@@ -87,9 +87,6 @@ const marker = new AdvancedMarkerElement({
         case "Release Year":
           fieldValue = record["Release Year"]?.toString() ?? "";
           break;
-        case "Location":
-          fieldValue = record.Location?.toLowerCase() ?? "";
-          break;
         case "Director":
           fieldValue = record.Director?.toLowerCase() ?? "";
           break;
