@@ -1,4 +1,4 @@
-const SearchableMapLib = {
+var SearchableMapLib = {
   map: null,
   markers: [],
   data: [],
