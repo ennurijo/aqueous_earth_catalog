@@ -13,11 +13,14 @@ var SearchableMapLib = {
     this.filePath = options.filePath ?? this.filePath;
     this.fileType = options.fileType ?? this.fileType;
 
+    
     // Initialize Google Maps
     this.map = new google.maps.Map(document.getElementById("mapCanvas"), {
       center: options.mapCentroid ?? { lat: 48.8575, lng: 2.3514 }, // Default to Paris
       zoom: options.defaultZoom ?? 13,
     });
+
+    console.log("Google Map Initialized:", this.map);
 
     // Load data from the CSV file
     this.loadData();
@@ -33,16 +36,22 @@ var SearchableMapLib = {
       .catch((error) => console.error("Error loading data:", error));
   },
 
+console.log("Loaded data:", data);
+
+  
   // Create markers for the map based on the loaded data
   createMarkers() {
     this.data.forEach((record) => {
       const lat = parseFloat(record.latitude);
       const lng = parseFloat(record.longitude);
 
-      if (lat && lng) {
-const { AdvancedMarkerElement } = google.maps.marker;
+if (isNaN(lat) || isNaN(lng)) {
+  console.warn("Invalid coordinates:", record);
+  return;
+}
+      
 
-const marker = new AdvancedMarkerElement({
+const marker = new google.maps.Marker({
   position: { lat, lng },
   map: this.map,
   title: record.Title ?? "No Title",
@@ -60,7 +69,8 @@ const marker = new AdvancedMarkerElement({
         marker.addListener("click", () => infoWindow.open(this.map, marker));
 
         this.markers.push(marker); // Save marker to the markers array
-      }
+        console.log("Marker added:", marker);
+
     });
   },
 
