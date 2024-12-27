@@ -1,4 +1,12 @@
-
+var SearchableMapLib = {
+  map: null,
+  markers: [],
+  data: [],
+  filePath: "data/Hydrography Dec 23 2023 Test", // Path to the CSV file
+  fileType: "csv", // File type (CSV)
+  recordName: "Film",
+  recordNamePlural: "Films",
+  
   // Initialize the map and load data
   initialize(options = {}) {
     // Update options if provided
