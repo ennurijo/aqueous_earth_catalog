@@ -71,5 +71,49 @@ const SearchableMapLib = {
                     customData: d  // Store the entire data record for later use
                 });
 
-                // Create the popup content for each marker
-             
+                 // Search function to filter markers
+    doSearch: function() {
+        const searchTerm = document.getElementById("search-input").value.toLowerCase();
+        const filterType = document.getElementById("search-filter").value;
+
+        // Iterate over markers and filter based on search term and selected filter
+        this.markers.forEach(function(marker, index) {
+            const record = SearchableMapLib.data[index];  // Get the record from data
+            let fieldValue = '';
+
+            // Determine the field to filter based on the selected filter type
+            switch (filterType) {
+                case 'Title':
+                    fieldValue = record["film title"] ? record["film title"].toLowerCase() : '';
+                    break;
+                case 'Release Year':
+                    fieldValue = record["release year"] ? record["release year"].toString().toLowerCase() : '';
+                    break;
+                case 'Location':
+                    fieldValue = record["location"] ? record["location"].toLowerCase() : '';
+                    break;
+                case 'Director':
+                    fieldValue = record["director"] ? record["director"].toLowerCase() : '';
+                    break;
+                default:
+                    fieldValue = '';
+            }
+
+            // Check if the search term matches the field value
+            if (fieldValue.includes(searchTerm)) {
+                marker.setVisible(true);  // Show the marker if it matches
+            } else {
+                marker.setVisible(false);  // Hide the marker if it doesn't match
+            }
+        });
+    },
+
+    // Reset the search
+    resetSearch: function() {
+        document.getElementById("search-input").value = '';  // Clear search input
+        document.getElementById("search-filter").value = 'Title';  // Reset filter to 'Title'
+        this.markers.forEach(function(marker) {
+            marker.setVisible(true);  // Reset visibility of all markers
+        });
+    }
+};
