@@ -21,7 +21,7 @@ const SearchableMapLib = {
         this.mapCentroid = options.map_centroid || [48.8575, 2.3514]; // Default to Paris, France
 
         // The default zoom level of the map
-        this.defaultZoom = options.defaultZoom || 13;
+        this.defaultZoom = options.defaultZoom || 7;
 
         // The default search radius (default to 1 mile in meters)
         this.defaultRadius = options.defaultRadius || 1610; // Default radius in meters (1 mile)
