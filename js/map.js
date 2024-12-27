@@ -21,7 +21,7 @@ function fetchCSVAndDisplayMarkers() {
             var title = row.Title;  // Assuming the CSV column is called 'Title'
 
             if (!isNaN(lat) && !isNaN(lng)) {
-                var marker = new google.maps.marker({
+                var marker = new google.maps.Marker({
                     position: { lat: lat, lng: lng },
                     map: map,
                     title: title // Set the title to be displayed when the marker is hovered over
