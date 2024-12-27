@@ -2,176 +2,142 @@ const SearchableMapLib = {
     map: null,
     markers: [],
     data: [],
-    currentSearch: '',
+    filePath: "data/Hydrography Dec 23 2023 Test", // Path to the CSV file
+    fileType: "csv", // File type (CSV)
+    recordName: "Film",
+    recordNamePlural: "Films",
 
-    initialize: function(options) {
-        // The path to your CSV file - INPUT YOUR FILE PATH HERE
-        this.filePath = options.filePath;  "data/Hydrography Dec 23 2023 Test"
-        
-        // The file type, which should be "csv" for your case
-        this.fileType = options.fileType || "csv"; // You should leave this as "csv" for your CSV file
+    // Initialize the map and load data
+    initialize: function(options = {}) {
+        // Update options if provided
+        this.filePath = options.filePath || this.filePath;
+        this.fileType = options.fileType || this.fileType;
 
-        // The name of a single record (film title or similar)
-        this.recordName = options.recordName;  "Film"
-
-        // The plural name of the record (films or similar)
-        this.recordNamePlural = options.recordNamePlural; "Films"
-
-        // Centroid of the map to set initial map center (default to Paris if not specified)
-        this.mapCentroid = options.map_centroid || [48.8575, 2.3514]; // Default to Paris, France
-
-        // The default zoom level of the map
-        this.defaultZoom = options.defaultZoom || 13;
-
-        // The default search radius (default to 1 mile in meters)
-        this.defaultRadius = options.defaultRadius || 1610; // Default radius in meters (1 mile)
-
-        // Option to enable debug mode (set to true to view debug messages)
-        this.debug = options.debug || false;
-
-        // Create the map using the Google Maps API
-        this.map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: this.mapCentroid[0], lng: this.mapCentroid[1] },
-            zoom: this.defaultZoom
+        // Initialize Google Maps
+        this.map = new google.maps.Map(document.getElementById("mapCanvas"), {
+            center: options.mapCentroid || { lat: 48.8575, lng: 2.3514 }, // Default to Paris
+            zoom: options.defaultZoom || 13
         });
 
-        // Load data (CSV file) and process it
+        // Load data from the CSV file
         this.loadData();
     },
 
-    // Load the CSV data and process it into markers on the map
+    // Load the CSV data and process it into markers
     loadData: function() {
         const _this = this;
-        
-        // Load CSV file
         d3.csv(`${this.filePath}.${this.fileType}`)
             .then(function(data) {
-                _this.data = data;
-                _this.createMarkers();  // Create markers after data is loaded
+                _this.data = data; // Save the loaded data
+                _this.createMarkers(); // Create markers for the map
             })
             .catch(function(error) {
-                console.error("Error loading data: ", error);
+                console.error("Error loading data:", error);
             });
     },
 
-    // Create markers on the map based on loaded data
+    // Create markers for the map based on the loaded data
     createMarkers: function() {
         const _this = this;
 
-        // Loop through the data and create markers
-        this.data.forEach(function(d) {
-            const lat = parseFloat(d.latitude);
-            const lng = parseFloat(d.longitude);
+        this.data.forEach(function(record) {
+            const lat = parseFloat(record.latitude);
+            const lng = parseFloat(record.longitude);
 
             if (lat && lng) {
                 const marker = new google.maps.Marker({
-                    position: { lat: lat, lng: lng },
+                    position: { lat, lng },
                     map: _this.map,
-                    title: d["film title"] || "No Title",  // Marker title from data
-                    customData: d  // Store the entire data record for later use in search
+                    title: record["Title"] || "No Title", // Use "Title" column for marker title
+                    customData: record // Store the full data record
                 });
 
-                // Create the popup content for each marker
-                const popupContent = `
-                    <strong>${d["Title"] || "N/A"}</strong><br />
-                    Release Year: ${d["Release Year"] || "N/A"}<br />
-                    Location: ${d["Location"] || "N/A"}<br />
-                    Director: ${d["Director"] || "N/A"}<br />
-                    <strong>Description:</strong> ${d["Description"] || "N/A"}<br />
-                `;
-
-                const infowindow = new google.maps.InfoWindow({
-                    content: popupContent
+                // Add an info window to each marker
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `<strong>${record["Title"] || "N/A"}</strong><br/>
+                              Release Year: ${record["Release Year"] || "N/A"}<br/>
+                              Location: ${record["Location"] || "N/A"}<br/>
+                              Director: ${record["Director"] || "N/A"}`
                 });
 
-                // Marker interactions
-                marker.addListener('click', function() {
-                    infowindow.open(_this.map, marker);
+                // Add event listeners for marker interactions
+                marker.addListener("click", function() {
+                    infoWindow.open(_this.map, marker);
                 });
 
-                marker.addListener('mouseover', function() {
-                    infowindow.open(_this.map, marker);
-                });
-
-                marker.addListener('mouseout', function() {
-                    infowindow.close();
-                });
-
-                _this.markers.push(marker);  // Add marker to the markers array
+                _this.markers.push(marker); // Save marker to the markers array
             }
         });
     },
 
-    // Function to search the markers based on user input
+    // Perform a search on the markers
+    doSearch: function() {
+        console.log("doSearch called");
+        const searchTerm = document.getElementById("search-input").value.toLowerCase();
+        const filterType = document.getElementById("search-filter").value;
 
-    doSearch() {
-  console.log('doSearch called');
-  const searchTerm = document.getElementById("search-input").value.toLowerCase();
-  const filterType = document.getElementById("search-filter").value;
+        // Reset if search term is empty
+        if (!searchTerm) {
+            console.log("Empty search term, resetting markers.");
+            this.resetMap();
+            return;
+        }
 
-  // Loop over the markers and the data (CSV data)
-  this.markers.forEach((marker, index) => {
-    const record = this.data[index]; // Get the corresponding data record from CSV
-    let fieldValue = ''; // Will store the value to search on
+        // Filter markers based on search term and filter type
+        this.markers.forEach((marker, index) => {
+            const record = this.data[index]; // Get the corresponding record
+            let fieldValue = "";
 
-    // Determine which field to search based on the filter type
-    switch (filterType) {
-      case 'Title':
-        fieldValue = record.Title?.toLowerCase() || ''; // Match Title
-        break;
-      case 'Release Year':
-        fieldValue = record['Release Year']?.toString() || ''; // Match Release Year (convert to string for comparison)
-        break;
-      case 'Director':
-        fieldValue = record.Director?.toLowerCase() || ''; // Match Director
-        break;
-      default:
-        fieldValue = ''; // Default to empty string if filter is invalid
+            switch (filterType) {
+                case "Title":
+                    fieldValue = record["Title"]?.toLowerCase() || "";
+                    break;
+                case "Release Year":
+                    fieldValue = record["Release Year"]?.toString() || "";
+                    break;
+                case "Location":
+                    fieldValue = record["Location"]?.toLowerCase() || "";
+                    break;
+                case "Director":
+                    fieldValue = record["Director"]?.toLowerCase() || "";
+                    break;
+                default:
+                    console.warn("Invalid filter type.");
+                    return;
+            }
+
+            // Show or hide markers based on the match
+            marker.setVisible(fieldValue.includes(searchTerm));
+        });
+    },
+
+    // Reset all markers to visible and clear inputs
+    resetMap: function() {
+        this.markers.forEach(marker => marker.setVisible(true));
+        document.getElementById("search-input").value = "";
+        document.getElementById("search-filter").value = "Title";
+        console.log("Map reset complete.");
+    }
+};
+
+// Attach event listeners to buttons
+document.addEventListener("DOMContentLoaded", function() {
+    const btnSearch = document.getElementById("btnSearch");
+    const btnReset = document.getElementById("btnReset");
+
+    // Initialize the map library
+    SearchableMapLib.initialize();
+
+    // Attach button actions
+    if (btnSearch) {
+        btnSearch.addEventListener("click", function() {
+            SearchableMapLib.doSearch();
+        });
     }
 
-    // If the field value contains the search term, show the marker; otherwise, hide it
-    // ** This logic can be replaced by calling the searchMarkers function**
-    // if (fieldValue.includes(searchTerm)) {
-    //   marker.setVisible(true); // Show marker
-    // } else {
-    //   marker.setVisible(false); // Hide marker
-    // }
-  });
-
-  // Call the searchMarkers function with the searchTerm
-  this.searchMarkers(searchTerm);
-},
-
-searchMarkers: function(searchTerm) {
-  this.markers.forEach(marker => {
-    const markerTitle = marker.getTitle().toLowerCase();
-    if (markerTitle.includes(searchTerm)) {
-      marker.setVisible(true);
-    } else {
-      marker.setVisible(false);
+    if (btnReset) {
+        btnReset.addEventListener("click", function() {
+            SearchableMapLib.resetMap();
+        });
     }
-  });
-}
-
-
-    // Function to handle the reset button functionality
-resetMap: function() {
-    // Reset all markers visibility to true (showing all markers)
-    this.markers.forEach(marker => {
-        marker.setVisible(true);
-    });
-    }
-
-// Event listener for search button
-document.getElementById('btnSearch').addEventListener('click', function() {
-    console.log('Search triggered');
-    SearchableMapLib.doSearch(); // Trigger the search
-});
-
-// Event listener for reset button
-document.getElementById('btnReset').addEventListener('click', function() {
-    console.log('Reset triggered');
-    document.getElementById('search-input').value = '';  // Clear the input
-    document.getElementById('search-filter').value = 'Title';  // Reset the filter to default
-    SearchableMapLib.resetMap();  // Optionally reset the map view or markers if needed
 });
