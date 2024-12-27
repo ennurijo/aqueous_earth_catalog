@@ -4,7 +4,7 @@ var map;
 function initMap() {
     map = new google.maps.Map(document.getElementById('mapCanvas'), {
         center: { lat: 48.8566, lng: 2.3522 }, // Initial coordinates for Paris
-        zoom: 2
+        zoom: 7
     });
 
     // Fetch CSV and add markers
