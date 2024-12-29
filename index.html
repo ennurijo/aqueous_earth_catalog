@@ -144,46 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Handle the reset button click
-    if (btnReset) {
-        btnReset.addEventListener("click", function() {
-            console.log('Reset button clicked');
-            // Reset the search input
-            document.getElementById('search-input').value = '';
-            // Reset the search filter
-            document.getElementById('search-filter').value = 'Title'; // Default filter type
-            // Make all markers visible again
-            SearchableMapLib.markers.forEach(function(marker) {
-                marker.setVisible(true);
-            });
-        });
-    }
-
-    // Handle the list view toggle button click
-    if (btnViewMode) {
-        btnViewMode.addEventListener("click", function() {
-            console.log('List View button clicked');
-            // Toggle map visibility (or change to list view)
-            const mapCanvas = document.getElementById("mapCanvas");
-            const listView = document.getElementById("listView"); // If you have a div for list view
-
-            if (mapCanvas.style.display !== "none") {
-                // Hide map and show list view
-                mapCanvas.style.display = "none";
-                if (listView) {
-                    listView.style.display = "block";
-                }
-                btnViewMode.innerHTML = '<i class="fa fa-map"></i> Map view'; // Change button text
-            } else {
-                // Show map and hide list view
-                mapCanvas.style.display = "block";
-                if (listView) {
-                    listView.style.display = "none";
-                }
-                btnViewMode.innerHTML = '<i class="fa fa-list"></i> List view'; // Change button text
-            }
-        });
-    }
 });
 </script>
 </body>
