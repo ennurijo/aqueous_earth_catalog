@@ -59,9 +59,14 @@ var SearchableMapLib = {
     },
 
     doSearch: function() {
+                console.log("Search executed");
+
         const searchTerm = document.getElementById("search-input").value.toLowerCase();
         const filterType = document.getElementById("search-filter").value;
-
+        
+ console.log("Search Term:", searchTerm);
+                console.log("Filter Type:", filterType);
+        
         this.markers.forEach((marker, index) => {
             const record = this.data[index];
             let fieldValue = "";
@@ -80,8 +85,7 @@ var SearchableMapLib = {
                     fieldValue = "";
             }
                
-                console.log("Search Term:", searchTerm);
-                console.log("Filter Type:", filterType);
+               
                 console.log("Markers to Filter:", this.markers.length);
 
 marker.setVisible(fieldValue.includes(searchTerm));
