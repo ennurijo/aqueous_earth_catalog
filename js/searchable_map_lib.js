@@ -5,7 +5,7 @@ var SearchableMapLib = {
     currentSearch: '',
 
     initialize: function(options) {
-        console.log("Map Initialization Started");  // Add this log
+        console.log("Map Initialization Started");  // Add this log to track map initialization
 
         this.filePath = options.filePath; // Path to your CSV file
         this.fileType = options.fileType || "csv"; // File type (default: csv)
@@ -22,8 +22,7 @@ var SearchableMapLib = {
             zoom: this.defaultZoom,
         });
 
-    console.log("Map Initialized:", this.map);  // Add this log to confirm map initialization
-
+        console.log("Map Initialized:", this.map);  // Log to confirm map initialization
         
         // Load data from the CSV file
         this.loadData();
@@ -35,8 +34,8 @@ var SearchableMapLib = {
             .then(function(data) {
                 _this.data = data;
                 _this.createMarkers();
-                    console.log("Data loaded:", this.data);
-                    console.log("Markers created:", this.markers.length);
+                console.log("Data loaded:", _this.data);
+                console.log("Markers created:", _this.markers.length);
             })
             .catch(function(error) {
                 console.error("Error loading data: ", error);
@@ -64,14 +63,14 @@ var SearchableMapLib = {
     },
 
     doSearch: function() {
-                console.log("Search executed");
+        console.log("Search executed");
 
         const searchTerm = document.getElementById("search-input").value.toLowerCase();
         const filterType = document.getElementById("search-filter").value;
-        
- console.log("Search Term:", searchTerm);
-                console.log("Filter Type:", filterType);
-        
+
+        console.log("Search Term:", searchTerm);
+        console.log("Filter Type:", filterType);
+
         this.markers.forEach((marker, index) => {
             const record = this.data[index];
             let fieldValue = "";
@@ -89,11 +88,10 @@ var SearchableMapLib = {
                 default:
                     fieldValue = "";
             }
-               
-               
-               console.log("Field Value:", fieldValue);  // Log the field value
-        console.log("Marker visibility set to:", fieldValue.includes(searchTerm));  // Log visibility change
-        marker.setVisible(fieldValue.includes(searchTerm));
+
+            console.log("Field Value:", fieldValue);  // Log the field value
+            console.log("Marker visibility set to:", fieldValue.includes(searchTerm));  // Log visibility change
+            marker.setVisible(fieldValue.includes(searchTerm));
         });
     },
 
