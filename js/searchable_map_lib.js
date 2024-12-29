@@ -30,6 +30,8 @@ var SearchableMapLib = {
             .then(function(data) {
                 _this.data = data;
                 _this.createMarkers();
+                    console.log("Data loaded:", this.data);
+                    console.log("Markers created:", this.markers.length);
             })
             .catch(function(error) {
                 console.error("Error loading data: ", error);
@@ -71,17 +73,18 @@ var SearchableMapLib = {
                 case "Release Year":
                     fieldValue = record["release year"] ? record["release year"].toString().toLowerCase() : "";
                     break;
-                case "Location":
-                    fieldValue = record["location"] ? record["location"].toLowerCase() : "";
-                    break;
                 case "Director":
                     fieldValue = record["director"] ? record["director"].toLowerCase() : "";
                     break;
                 default:
                     fieldValue = "";
             }
+               
+                console.log("Search Term:", searchTerm);
+                console.log("Filter Type:", filterType);
+                console.log("Markers to Filter:", this.markers.length);
 
-            marker.setVisible(fieldValue.includes(searchTerm));
+marker.setVisible(fieldValue.includes(searchTerm));
         });
     },
 
