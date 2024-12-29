@@ -86,9 +86,9 @@ var SearchableMapLib = {
             }
                
                
-                console.log("Markers to Filter:", this.markers.length);
-
-marker.setVisible(fieldValue.includes(searchTerm));
+               console.log("Field Value:", fieldValue);  // Log the field value
+        console.log("Marker visibility set to:", fieldValue.includes(searchTerm));  // Log visibility change
+        marker.setVisible(fieldValue.includes(searchTerm));
         });
     },
 
