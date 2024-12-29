@@ -5,6 +5,8 @@ var SearchableMapLib = {
     currentSearch: '',
 
     initialize: function(options) {
+        console.log("Map Initialization Started");  // Add this log
+
         this.filePath = options.filePath; // Path to your CSV file
         this.fileType = options.fileType || "csv"; // File type (default: csv)
         this.recordName = options.recordName; // Singular record name (e.g., Film)
@@ -20,6 +22,9 @@ var SearchableMapLib = {
             zoom: this.defaultZoom,
         });
 
+    console.log("Map Initialized:", this.map);  // Add this log to confirm map initialization
+
+        
         // Load data from the CSV file
         this.loadData();
     },
