@@ -79,27 +79,26 @@
             Ennuri Jo's book manuscript, <i>Aqueous Image: Cinema and the Rhetoric of Water at the End of the World.</i></p>
             <br>
 
+           
             <!-- Search Box -->
-   <div class="card bg-light">
+            <div class="card bg-light">
                 <div class="card-body">
                     <div class="row">
-                            <div class="form-group">
-                                Search by Title, Release Year, Location (nearest town, city, province / city, or country), or Director. 
-                                <input class="form-control" id="search-input" placeholder="Enter search term" type="text">
-                 
-                  <br>
-                                Filter by:
-                                <select id="search-filter" class="form-control">
-                                    <option value="Title">Title</option>
-                                    <option value="Release Year">Release Year</option>
-                                    <option value="Location">Location</option>
-                                    <option value="Director">Director</option>
-                                </select>
-                        
+                        <div class="form-group">
+                            <label for="search-input">Search by Title, Release Year, Location, or Director:</label>
+                            <input class="form-control" id="search-input" placeholder="Enter search term" type="text">
+                            <br>
+                            <label for="search-filter">Filter by:</label>
+                            <select id="search-filter" class="form-control">
+                                <option value="Title">Title</option>
+                                <option value="Release Year">Release Year</option>
+                                <option value="Location">Location</option>
+                                <option value="Director">Director</option>
+                            </select>
                         </div>
-                         </div>
                     </div>
-   </div>
+                </div>
+            </div>
 
 
                     <!-- Buttons -->
@@ -107,22 +106,20 @@
                     <button class="btn btn-secondary" id="btnReset" title="Reset" type="button"><i class="fa fa-repeat" aria-hidden="true"></i> Reset</button>
                     <button class="btn btn-dark" id="btnViewMode" title="Change view"><i class="fa fa-list"></i> List view</button>
                 </div>
-            </div>
 
 
         <!-- Right column (6 parts) -->
         <div class="col-md-8" id="right-column">
 
-                    <div id="mapCanvas" style="height: 100%;"></div>
-                </div>
+                    <div id="mapCanvas" style="height: 90vh;"></div>
+    
 
                 <!-- Credit line -->
-                <div class="col-12" style="height: 10vh;">
+                <div class="col-12 mt-3">
                     <p style="text-align: right;">Based on <a href="https://github.com/datamade/searchable-map-template-csv" target="_blank">Searchable Map Template</a> by <a href="https://derekeder.com/">Derek Eder</a> and <a href="https://datamade.us">Datamade</a></p>
                 </div>
             </div>
         </div>
-    </div>
 </main>
 
 
