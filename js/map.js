@@ -12,7 +12,7 @@ function initMap() {
 }
 
 function fetchCSVAndDisplayMarkers() {
-    $.get("data/Hydrography Dec 23 Test.csv", function(csvData) {
+    $.get("data/AQEC Raw Data - Jan 9.csv", function(csvData) {
         var data = $.csv.toObjects(csvData);
 
         data.forEach(function(row) {
