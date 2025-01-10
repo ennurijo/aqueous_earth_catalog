@@ -16,32 +16,98 @@ function fetchCSVAndDisplayMarkers() {
         var data = $.csv.toObjects(csvData);
 
         data.forEach(function(row) {
-            var lat = parseFloat(row.latitude);  // Assuming the CSV column is called 'Latitude'
-            var lng = parseFloat(row.longitude); // Assuming the CSV column is called 'Longitude'
-            var title = row.Title;  // Assuming the CSV column is called 'Title'
+            var lat = parseFloat(row.latitude);
+            var lng = parseFloat(row.longitude);
+            var title = row.Title;
 
             if (!isNaN(lat) && !isNaN(lng)) {
                 var marker = new google.maps.Marker({
                     position: { lat: lat, lng: lng },
                     map: map,
-                    title: title // Set the title to be displayed when the marker is hovered over
+                    title: title
                 });
 
-           // Create an info window with the title
-                var infoWindow = new google.maps.InfoWindow({
-                    content: `<h3>${title}</h3>`
-                });
+                // Create content for the info window
+                var content = createInfoWindowContent(row);
 
-                // Show the info window when mouse is over the marker
+                // Create InfoWindow
+                var infoWindow = new google.maps.InfoWindow({ content: content });
+
+                // Add hover event listeners
                 marker.addListener('mouseover', function() {
                     infoWindow.open(map, marker);
                 });
-
-                // Close the info window when mouse leaves the marker
                 marker.addListener('mouseout', function() {
                     infoWindow.close();
                 });
             }
         });
     });
+}
+
+// Create the content for the info window
+function createInfoWindowContent(row) {
+    var content = `
+        <div class="card mb-3">
+            <h3 class="card-header">${row["Title"] || "N/A"}</h3>
+            <div class="card-body">
+                <h5 class="card-title">${row["Title"] || "N/A"}</h5>
+                
+                <!-- Always show the image -->
+                <div id="image-container">${generateImage(row)}</div>
+                
+                <!-- Video embed (only if available) -->
+                <div id="video-container">${generateVideo(row)}</div>
+
+                <!-- Description -->
+                <p class="card-text">${row["Description"] || "No description available."}</p>
+            </div>
+            
+            <!-- Additional info -->
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Release Year: ${row["Release Year"] || "N/A"}</li>
+                <li class="list-group-item">Director: ${row["Director"] || "N/A"}</li>
+                <li class="list-group-item">Language: ${row["Language"] || "N/A"}</li>
+            </ul>
+
+            <div class="card-footer text-muted">
+                Rights: ${row["Rights"] || "N/A"}
+            </div>
+        </div>
+    `;
+    return content;
+}
+
+// Generate the image (always shown)
+function generateImage(row) {
+    if (row["Image File"]) {
+        return `<img src="${row["Image File"]}" alt="Image of ${row["Title"]}" style="width: 100px; height: auto; margin-top: 5px;">`;
+    }
+    return '';  // If no image, return empty string
+}
+
+// Generate the video embed (if available)
+function generateVideo(row) {
+    if (row["YouTube Clip ID"]) {
+        return `<iframe 
+                    width="200" 
+                    height="113" 
+                    src="https://www.youtube.com/embed/${row["YouTube Clip ID"]}" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>`;
+    } else if (row["Archive.org Clip ID"]) {
+        return `<iframe 
+                    width="200" 
+                    height="113" 
+                    src="https://archive.org/embed/${row["Archive.org Clip ID"]}" 
+                    title="Archive.org video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>`;
+    }
+    return '';  // If no video, return empty string
 }
