@@ -28,7 +28,7 @@ function fetchCSVAndDisplayMarkers() {
                 });
 
                 // Load hover.html template
-                $.get("hover.html", function(hoverHtml) {
+                $.get("templates/hover.html", function(hoverHtml) {
                     // Create content by filling hover.html with the CSV row data
                     var content = populateHoverHtml(hoverHtml, row);
 
