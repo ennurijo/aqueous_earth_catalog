@@ -37,9 +37,11 @@ function fetchCSVAndDisplayMarkers() {
 
                     // Add hover event listeners
                     marker.addListener('mouseover', function() {
+                        console.log("Hovering over marker: ", title);  // Debugging line
                         infoWindow.open(map, marker);
                     });
                     marker.addListener('mouseout', function() {
+                        console.log("Mouseout from marker: ", title);  // Debugging line
                         infoWindow.close();
                     });
                 });
