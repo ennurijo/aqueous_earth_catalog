@@ -27,59 +27,37 @@ function fetchCSVAndDisplayMarkers() {
                     title: title
                 });
 
-                // Create content for the info window
-                var content = createInfoWindowContent(row);
+                // Load hover.html template
+                $.get("hover.html", function(hoverHtml) {
+                    // Create content by filling hover.html with the CSV row data
+                    var content = populateHoverHtml(hoverHtml, row);
 
-                // Create InfoWindow
-                var infoWindow = new google.maps.InfoWindow({ content: content });
+                    // Create InfoWindow
+                    var infoWindow = new google.maps.InfoWindow({ content: content });
 
-                // Add hover event listeners
-                marker.addListener('mouseover', function() {
-                    infoWindow.open(map, marker);
-                });
-                marker.addListener('mouseout', function() {
-                    infoWindow.close();
+                    // Add hover event listeners
+                    marker.addListener('mouseover', function() {
+                        infoWindow.open(map, marker);
+                    });
+                    marker.addListener('mouseout', function() {
+                        infoWindow.close();
+                    });
                 });
             }
         });
     });
 }
 
-// Create the content for the info window
-function createInfoWindowContent(row) {
-    var content = `
-        <div class="card mb-3">
-            <h3 class="card-header">${row["Title"] || "N/A"}</h3>
-            <div class="card-body">
-                
-                <!-- Always show the image -->
-                <div id="image-container">${generateImage(row)}</div>
-                
+// Function to populate hover.html with data
+function populateHoverHtml(hoverHtml, row) {
+    // Replace placeholders in hover.html with actual data from the CSV row
+    hoverHtml = hoverHtml.replace("{Title}", row["Title"] || "N/A")
+                         .replace("{ImageFile}", row["Image File"] || "")
+                         .replace("{Description}", row["Description"] || "No description available.")
+                         .replace("{ReleaseYear}", row["Release Year"] || "N/A")
+                         .replace("{Director}", row["Director"] || "N/A")
+                         .replace("{Language}", row["Language"] || "N/A")
+                         .replace("{Rights}", row["Rights"] || "N/A");
 
-                <!-- Description -->
-                <p class="card-text">${row["Description"] || "No description available."}</p>
-            </div>
-            
-            <!-- Additional info -->
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Release Year: ${row["Release Year"] || "N/A"}</li>
-                <li class="list-group-item">Director: ${row["Director"] || "N/A"}</li>
-                <li class="list-group-item">Language: ${row["Language"] || "N/A"}</li>
-            </ul>
-
-            <div class="card-footer text-muted">
-                Rights: ${row["Rights"] || "N/A"}
-            </div>
-        </div>
-    `;
-    return content;
-}
-
-// Generate the image (always shown)
-function generateImage(row) {
-    if (row["Image File"]) {
-        return `<img src="${row["Image File"]}" alt="Image of ${row["Title"]}" style="width: 100px; height: auto; margin-top: 5px;">`;
-    }
-    return '';  // If no image, return empty string
-
+    return hoverHtml;
 }
