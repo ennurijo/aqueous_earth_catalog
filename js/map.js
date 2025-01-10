@@ -27,13 +27,19 @@ function fetchCSVAndDisplayMarkers() {
                     title: title // Set the title to be displayed when the marker is hovered over
                 });
 
-                // Optionally add an info window that shows the title when clicked
+           // Create an info window with the title
                 var infoWindow = new google.maps.InfoWindow({
                     content: `<h3>${title}</h3>`
                 });
 
-                marker.addListener('click', function() {
+                // Show the info window when mouse is over the marker
+                marker.addListener('mouseover', function() {
                     infoWindow.open(map, marker);
+                });
+
+                // Close the info window when mouse leaves the marker
+                marker.addListener('mouseout', function() {
+                    infoWindow.close();
                 });
             }
         });
