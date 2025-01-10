@@ -1,22 +1,21 @@
 <div class="card mb-3">
-  <h3 class="card-header" id="title">N/A</h3>
-  <div class="card-body">
-    <h5 class="card-title" id="subtitle">Special title treatment</h5>
-    <h6 class="card-subtitle text-muted" id="location">Location: N/A</h6>
-    
-    <div id="image-container"></div>
+    <h3 class="card-header">{Title}</h3>
+    <div class="card-body">
+        <!-- Display image (always) -->
+        <img src="{ImageFile}" alt="Image of {Title}" style="width: 100px; height: auto; margin-top: 5px;">
 
-    <!-- Description -->
-    <p class="card-text" id="description">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  </div>
+        <!-- Description -->
+        <p class="card-text">{Description}</p>
+    </div>
 
-  <!-- Additional info section -->
-  <ul class="list-group list-group-flush" id="additional-info">
-    <li class="list-group-item" id="release-year">Release Year: N/A</li>
-    <li class="list-group-item" id="director">Director: N/A</li>
-    <li class="list-group-item" id="language">Language: N/A</li>
-  </ul>
-  
-  <!-- Footer with rights or other information -->
-  <div class="card-footer text-muted" id="rights">Rights: N/A</div>
+    <!-- Additional info -->
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Release Year: {ReleaseYear}</li>
+        <li class="list-group-item">Director: {Director}</li>
+        <li class="list-group-item">Language: {Language}</li>
+    </ul>
+
+    <div class="card-footer text-muted">
+        Rights: {Rights}
+    </div>
 </div>
