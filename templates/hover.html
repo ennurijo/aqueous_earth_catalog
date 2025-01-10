@@ -1,35 +1,26 @@
-<div class="hover-box">
-    <!-- Display the Title -->
-    <strong id="title">N/A</strong><br />
-
+<div class="card mb-3">
+  <h3 class="card-header" id="title">N/A</h3>
+  <div class="card-body">
+    <h5 class="card-title" id="subtitle">Special title treatment</h5>
+    <h6 class="card-subtitle text-muted" id="location">Location: N/A</h6>
+    
     <!-- Video (YouTube or Archive.org) -->
     <div id="video-container"></div>
 
-    <!-- Display an image only if no video is available -->
+    <!-- Image (only if no video) -->
     <div id="image-container"></div>
 
-    <!-- Display Release Year -->
-    <strong>Release Year:</strong> <span id="release-year">N/A</span><br />
+    <!-- Description -->
+    <p class="card-text" id="description">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
 
-    <!-- Display Location -->
-    <strong>Location:</strong> <span id="location">N/A</span><br />
-
-    <!-- Display Director -->
-    <strong>Director:</strong> <span id="director">N/A</span><br />
-
-    <!-- Display Language -->
-    <div id="language-container"></div>
-
-    <!-- Display Length -->
-    <div id="length-container"></div>
-
-    <!-- Display Description -->
-    <strong>Description:</strong> <span id="description">N/A</span><br />
-
-    <!-- Additional Information (Website URL) -->
-    <div id="website-url-container"></div>
-
-    <!-- Display Rights -->
-    <div id="rights-container"></div>
+  <!-- Additional info section -->
+  <ul class="list-group list-group-flush" id="additional-info">
+    <li class="list-group-item" id="release-year">Release Year: N/A</li>
+    <li class="list-group-item" id="director">Director: N/A</li>
+    <li class="list-group-item" id="language">Language: N/A</li>
+  </ul>
+  
+  <!-- Footer with rights or other information -->
+  <div class="card-footer text-muted" id="rights">Rights: N/A</div>
 </div>
-
